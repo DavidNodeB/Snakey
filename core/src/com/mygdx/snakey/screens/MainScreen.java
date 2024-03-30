@@ -1,17 +1,13 @@
 package com.mygdx.snakey.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.snakey.AssetLoader;
-import com.mygdx.snakey.Map;
-import com.mygdx.snakey.Player;
-import com.mygdx.snakey.Snakey;
+import com.mygdx.snakey.*;
 
 import java.util.Vector;
 
@@ -25,11 +21,13 @@ public class MainScreen implements Screen {
 
     ScreenViewport viewport;
 
-    Stage stage;
+    public Stage stage;
 
     public static float width;
 
     public static float height;
+
+    float movementTimer;
 
     public MainScreen(Map map, Player player) {
 
@@ -61,6 +59,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.graphics.getDeltaTime();
@@ -71,12 +70,36 @@ public class MainScreen implements Screen {
         Snakey.get().batch.end();
     }
 
+    private void update(float delta) {
+        handleInput();
+        movementTimer += delta;
+        if (movementTimer >= 0.1f) {
+            player.movePlayer();
+            movementTimer = 0f;
+        }
+    }
+
     @Override
     public void resize(int width, int height) {
         camera.viewportWidth = width;
         camera.viewportHeight = height;
         camera.position.set(width / 2f, height / 2f, 0);
         viewport.update(width, height);
+    }
+
+    private void handleInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
+            player.setCurrentDirection(Player.Direction.UP);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
+            player.setCurrentDirection(Player.Direction.RIGHT);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
+            player.setCurrentDirection(Player.Direction.DOWN);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+            player.setCurrentDirection(Player.Direction.LEFT);
+        }
     }
 
     @Override

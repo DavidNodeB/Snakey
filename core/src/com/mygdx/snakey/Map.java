@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Map {
     Texture lightTile;
     Texture darkTitle;
-    public final int tileSize = 32;
+    public final int tileSize = 40;
     public Map() {
         lightTile = Snakey.get().assetHandler.loadLight;
         darkTitle = Snakey.get().assetHandler.loadDark;
