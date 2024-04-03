@@ -1,71 +1,90 @@
 package com.mygdx.snakey;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Vector;
 
 
 public class Player {
     private Direction currentDirection;
-    Texture textureHead;
-    Texture textureBody;
-    Texture textureTail;
-    ArrayList<Sprite> snake;
-    ArrayList<Vector2> pastPositions;
+    Sprite head, body, curvedBody, tail;
+    ArrayList<Vector2> snake;
     private final int tileSize = 40;
     public enum Direction {
-        UP, DOWN, LEFT, RIGHT
+        UP, RIGHT, DOWN, LEFT
     }
     public Player() {
-        textureHead = new Texture(Snakey.get().assetHandler.loadHead.getTextureData());
-        textureBody = new Texture(Snakey.get().assetHandler.loadBody.getTextureData());
-        textureTail = new Texture(Snakey.get().assetHandler.loadTail.getTextureData());
         snake = new ArrayList<>();
-        pastPositions = new ArrayList<>();
-        float x = 0;
-        float y = 0;
 
-        Sprite spriteHead = new Sprite(textureHead, tileSize, tileSize);
-        spriteHead.setPosition(x, y);
-        pastPositions.add(new Vector2(x, y));
-
-        Sprite spriteBody = new Sprite(textureBody, tileSize, tileSize);
-        x+=tileSize;
-        spriteBody.setPosition(x, y);
-        pastPositions.add(new Vector2(x, y));
-
-        Sprite spriteTail = new Sprite(textureTail, tileSize, tileSize);
-        x+=tileSize;
-        spriteTail.setPosition(x, y);
-        pastPositions.add(new Vector2(x, y));
+        head = Snakey.get().assetHandler.head_right;
+        body = Snakey.get().assetHandler.body_vertical;
+        curvedBody = Snakey.get().assetHandler.body_topleft;
+        tail = Snakey.get().assetHandler.tail_left;
 
         setCurrentDirection(Direction.RIGHT);
 
-        snake.add(spriteTail);
-        snake.add(spriteBody);
-        snake.add(spriteHead);
+        snake.add(new Vector2(tileSize * 1, tileSize * 1));
+        snake.add(new Vector2(tileSize * 1, tileSize * 2));
+        snake.add(new Vector2(tileSize * 2, tileSize * 2));
+        snake.add(new Vector2(tileSize * 3, tileSize * 2));
+        snake.add(new Vector2(tileSize * 3, tileSize * 1));
+        snake.add(new Vector2(tileSize * 4, tileSize * 1));
+
     }
 
     public void render(SpriteBatch batch) {
-        for (Sprite sprite : snake) {
-            sprite.draw(batch);
+        // head
+        if (currentDirection == Direction.RIGHT) {
+            batch.draw(head, snake.get(0).x, snake.get(0).y, tileSize / 2f, tileSize / 2f, tileSize, tileSize, 1f, 1f, 0);
+        } else if (currentDirection == Direction.LEFT) {
+            batch.draw(head, snake.get(0).x, snake.get(0).y, tileSize / 2f, tileSize / 2f, tileSize, tileSize, 1f, 1f, 180);
+        } else {
+            batch.draw(head, snake.get(0).x, snake.get(0).y, tileSize / 2f, tileSize / 2f, tileSize, tileSize, 1f, 1f, currentDirection.ordinal() * 90f + 90f );
         }
+        // body
+        for (int i = 1; i < snake.size() - 1; i++) {
+            Vector2 prev = snake.get(i - 1);
+            Vector2 next = snake.get(i + 1);
+            Vector2 cur = snake.get(i);
+
+            Sprite sprite = null;
+            float rotation = 0;
+            if(prev.x == next.x) { // if x is straight
+                sprite = body;
+            } else if(prev.y == next.y) { // if y is straight
+                sprite = body;
+                rotation = 90; // correct
+            } else { // if x and y are not straight
+                sprite = curvedBody;
+                if (cur.x > prev.x) {
+                    if (next.y > cur.y) rotation = 0;
+                    if (next.y < cur.y) rotation = 90; // correct
+                }
+                if (cur.x < prev.x) {
+                    if (next.y > cur.y) rotation = 0;
+                    if (next.y < cur.y) rotation = 0;
+                }
+                if (cur.y < prev.y) {
+                    if (next.x > cur.x) rotation = 270; // correct
+                    if (next.x < cur.x) rotation = 0;
+                }
+                if (cur.y > prev.y) {
+                    if (next.x > cur.x) rotation = 180; // correct
+                    if (next.x < cur.x) rotation = 0;
+                }
+            }
+            batch.draw(sprite, snake.get(i).x, snake.get(i).y, tileSize / 2f, tileSize / 2f, tileSize, tileSize, 1f, 1f, rotation);
+        }
+        // tail
+        batch.draw(tail, snake.get(snake.size() - 1).x, snake.get(snake.size() - 1).y);
     }
     public void moveSnake(float xAmount, float yAmount) {
-        // body and tail
-        for(int i = 0; i < pastPositions.size() - 1; i++) {
-            pastPositions.get(i).x = pastPositions.get(i + 1).x;
-            pastPositions.get(i).y = pastPositions.get(i + 1).y;
-        }
-        // head
-        pastPositions.get(pastPositions.size() - 1).x += xAmount;
-        pastPositions.get(pastPositions.size() - 1).y += yAmount;
-        for (int i = 0; i < pastPositions.size(); i++) {
-            snake.get(i).setX(pastPositions.get(i).x);
-            snake.get(i).setY(pastPositions.get(i).y);
-        }
+        snake.remove(snake.size() - 1); // remove tail
+        snake.add(0, new Vector2(snake.get(0).x + xAmount, snake.get(0).y + yAmount));
+
     }
     public void movePlayer() {
         switch (currentDirection) {

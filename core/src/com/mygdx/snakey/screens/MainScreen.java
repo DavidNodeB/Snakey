@@ -73,7 +73,7 @@ public class MainScreen implements Screen {
     private void update(float delta) {
         handleInput();
         movementTimer += delta;
-        if (movementTimer >= 0.1f) {
+        if (movementTimer >= 0.09f) {
             player.movePlayer();
             movementTimer = 0f;
         }
@@ -88,16 +88,17 @@ public class MainScreen implements Screen {
     }
 
     private void handleInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
+        Player.Direction curDir = player.getCurrentDirection();
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W) && curDir != Player.Direction.DOWN) {
             player.setCurrentDirection(Player.Direction.UP);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D) && curDir != Player.Direction.LEFT) {
             player.setCurrentDirection(Player.Direction.RIGHT);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S) && curDir != Player.Direction.UP) {
             player.setCurrentDirection(Player.Direction.DOWN);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)  && curDir != Player.Direction.RIGHT) {
             player.setCurrentDirection(Player.Direction.LEFT);
         }
     }

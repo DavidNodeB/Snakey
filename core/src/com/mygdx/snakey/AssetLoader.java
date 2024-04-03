@@ -1,55 +1,75 @@
 package com.mygdx.snakey;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-
-import java.awt.*;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class AssetLoader {
     public AssetManager manager;
+    public TextureAtlas atlas;
+    public Sprite apple;
+    public Sprite body_bottomleft;
+    public Sprite body_bottomright;
+    public Sprite body_horizontal;
+    public Sprite body_topleft;
+    public Sprite body_topright;
+    public Sprite body_vertical;
+    public Sprite head_down;
+    public Sprite head_left;
+    public Sprite head_right;
+    public Sprite head_up;
+    public Sprite tail_down;
+    public Sprite tail_left;
+    public Sprite tail_right;
+    public Sprite tail_up;
+    public Texture loadLight;
+    public Texture loadDark;
+
+
     public AssetLoader() {
         manager = new AssetManager();
     }
-    public Texture loadLight;
-    public Texture loadDark;
-    public Texture loadHead;
-    public Texture loadBody;
-    public Texture loadTail;
 
     public void LoadAssets() {
-        LoadTextures();
+        LoadTiles();
         manager.finishLoading();
-        getTextures();
+        getTiles();
+        atlas = new TextureAtlas(Gdx.files.internal("snakegame/snakegame.atlas"));
+        CreateSprite();
     }
 
-    public void LoadTextures() {
-        manager.load("head/head_up.png", Texture.class);
-        manager.load("head/head_down.png", Texture.class);
-        manager.load("head/head_left.png", Texture.class);
-        manager.load("head/head_right.png", Texture.class);
-        manager.load("body/body_bottomleft.png", Texture.class);
-        manager.load("body/body_bottomright.png", Texture.class);
-        manager.load("body/body_horizontal.png", Texture.class);
-        manager.load("body/body_topleft.png", Texture.class);
-        manager.load("body/body_topright.png", Texture.class);
-        manager.load("body/body_vertical.png", Texture.class);
-        manager.load("tail/tail_down.png", Texture.class);
-        manager.load("tail/tail_left.png", Texture.class);
-        manager.load("tail/tail_right.png", Texture.class);
-        manager.load("tail/tail_up.png", Texture.class);
+    public void CreateSprite() {
+        apple = atlas.createSprite("apple");
+        body_bottomleft = atlas.createSprite("body_bottomleft");
+        body_bottomright = atlas.createSprite("body_bottomright");
+        body_horizontal = atlas.createSprite("body_horizontal");
+        body_topleft = atlas.createSprite("body_topleft");
+        body_topright = atlas.createSprite("body_topright");
+        body_vertical = atlas.createSprite("body_vertical");
+        head_down = atlas.createSprite("head_down");
+        head_left = atlas.createSprite("head_left");
+        head_right = atlas.createSprite("head_right");
+        head_up = atlas.createSprite("head_up");
+        tail_down = atlas.createSprite("tail_down");
+        tail_left = atlas.createSprite("tail_left");
+        tail_right = atlas.createSprite("tail_right");
+        tail_up = atlas.createSprite("tail_up");
+    }
+
+    public void LoadTiles() {
         manager.load("tiles/light.png", Texture.class);
         manager.load("tiles/dark.png", Texture.class);
     }
 
-    public void getTextures() {
-        loadLight = manager.get("tiles/light.png");
-        loadDark = manager.get("tiles/dark.png");
-        loadHead = manager.get("head/head_right.png");
-        loadBody = manager.get("body/body_horizontal.png");
-        loadTail = manager.get("tail/tail_left.png");
+    public void getTiles() {
+        loadLight = manager.get("tiles/light.png", Texture.class);
+        loadDark = manager.get("tiles/dark.png", Texture.class);
     }
 
     public void dispose() {
         manager.dispose();
+        atlas.dispose();
     }
 }
