@@ -24,15 +24,19 @@ public class Player {
         curvedBody = Snakey.get().assetHandler.body_topleft;
         tail = Snakey.get().assetHandler.tail_left;
 
-        setCurrentDirection(Direction.RIGHT);
+        setCurrentDirection(Direction.LEFT);
 
-        snake.add(new Vector2(tileSize * 1, tileSize * 1));
-        snake.add(new Vector2(tileSize * 1, tileSize * 2));
-        snake.add(new Vector2(tileSize * 2, tileSize * 2));
-        snake.add(new Vector2(tileSize * 3, tileSize * 2));
+        snake.add(new Vector2(tileSize * 0, tileSize * 0));
+        snake.add(new Vector2(tileSize * 1, tileSize * 0));
+        snake.add(new Vector2(tileSize * 2, tileSize * 0));
+        snake.add(new Vector2(tileSize * 2, tileSize * 1));
         snake.add(new Vector2(tileSize * 3, tileSize * 1));
         snake.add(new Vector2(tileSize * 4, tileSize * 1));
-
+        snake.add(new Vector2(tileSize * 4, tileSize * 2));
+        snake.add(new Vector2(tileSize * 5, tileSize * 2));
+        snake.add(new Vector2(tileSize * 5, tileSize * 1));
+        snake.add(new Vector2(tileSize * 6, tileSize * 1));
+        snake.add(new Vector2(tileSize * 6, tileSize * 0));
     }
 
     public void render(SpriteBatch batch) {
@@ -77,6 +81,7 @@ public class Player {
                 }
             }
             batch.draw(sprite, snake.get(i).x, snake.get(i).y, tileSize / 2f, tileSize / 2f, tileSize, tileSize, 1f, 1f, rotation);
+
         }
         // tail
         batch.draw(tail, snake.get(snake.size() - 1).x, snake.get(snake.size() - 1).y);
@@ -87,20 +92,20 @@ public class Player {
 
     }
     public void movePlayer() {
-        switch (currentDirection) {
-            case UP:
-                moveSnake(0f, tileSize);
-                break;
-            case DOWN:
-                moveSnake(0f, -tileSize);
-                break;
-            case LEFT:
-                moveSnake(-tileSize, 0f);
-                break;
-            case RIGHT:
-                moveSnake(tileSize, 0f);
-                break;
-        }
+//        switch (currentDirection) {
+//            case UP:
+//                moveSnake(0f, tileSize);
+//                break;
+//            case DOWN:
+//                moveSnake(0f, -tileSize);
+//                break;
+//            case LEFT:
+//                moveSnake(-tileSize, 0f);
+//                break;
+//            case RIGHT:
+//                moveSnake(tileSize, 0f);
+//                break;
+//        }
     }
 
     public Direction getCurrentDirection() {
